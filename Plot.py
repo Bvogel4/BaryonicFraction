@@ -47,8 +47,8 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.hist(Plots['luminous'][i],bins,histtype='step',color='navy',linewidth=3)
     ax.hist(Plots['luminous'][i],bins,color='cornflowerblue',alpha=.7)
     ax.legend(loc='upper left',prop={'size':15})
-    f.savefig(f'Plots/Entire.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'Plots/Entire.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='Plot.py'
     plt.close()
 
@@ -69,12 +69,12 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.hist(Plots['luminous_Inner'][i],bins,histtype='step',color='navy',linewidth=3)
     ax.hist(Plots['luminous_Inner'][i],bins,color='cornflowerblue',alpha=.7)
     ax.legend(loc='upper left',prop={'size':15})
-    f.savefig(f'Plots/Inner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'Plots/Inner.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='Plot.py'
     plt.close()
 
-imagenames = os.listdir('Plots/')
+imagenames = os.listdir('GifPlots/')
 imagenames = np.sort(np.array(imagenames))
 images,images_inner = [[],[]]
 for name in imagenames:
@@ -82,9 +82,9 @@ for name in imagenames:
         images.append(imageio.imread(f'Plots/{name}'))
     else:
         images_inner.append(imageio.imread(f'Plots/{name}'))
-imageio.mimsave('EntireBaryonicFraction.gif', images, duration=.15)
-meta = OSXMetaData('EntireBaryonicFraction.gif')
+imageio.mimsave('Plots/EntireBaryonicFraction.gif', images, duration=.15)
+meta = OSXMetaData('Plots/EntireBaryonicFraction.gif')
 meta.creator='Plot.py'
-imageio.mimsave('InnerBaryonicFraction.gif', images_inner, duration=.15)
-meta = OSXMetaData('InnerBaryonicFraction.gif')
+imageio.mimsave('Plots/InnerBaryonicFraction.gif', images_inner, duration=.15)
+meta = OSXMetaData('Plots/InnerBaryonicFraction.gif')
 meta.creator='Plot.py'
