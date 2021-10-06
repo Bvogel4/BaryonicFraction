@@ -33,26 +33,18 @@ except:
     print(f'\tTimestep {args.simulation}-00{args.timestep} has no stat file.')
     sys.exit()
 
-Data[args.simulation][args.timestep] = {'time':np.nan,'luminous':{},'dark':{}}
-luminous,dark,resolved = [[],[],[]]
+Data[args.simulation][args.timestep] = {'time':np.nan,'halos':{}}
+resolved = []
 for line in stat:
     grp = int(line.split()[0])
     ngas = int(line.split()[2])
     nstar = int(line.split()[3])
     if ngas > 0:
         resolved.append(grp)
-        if nstar > 0:
-            luminous.append(grp)
-            Data[args.simulation][args.timestep]['luminous'][str(grp)] = {'Rvir':float(line.split()[6]),
-                                                                        'Mvir':float(line.split()[5]),
-                                                                        'Mgas':float(line.split()[7]),
-                                                                        'Mstar':float(line.split()[8])}
-        else:
-            dark.append(grp)
-            Data[args.simulation][args.timestep]['dark'][str(grp)] = {'Rvir':float(line.split()[6]),
-                                                                        'Mvir':float(line.split()[5]),
-                                                                        'Mgas':float(line.split()[7]),
-                                                                        'Mstar':float(line.split()[8])}
+        Data[args.simulation][args.timestep]['halos'][str(grp)] = {'Rvir':float(line.split()[6]),
+                                                                    'Mvir':float(line.split()[5]),
+                                                                    'Mgas':float(line.split()[7]),
+                                                                    'Mstar':float(line.split()[8])}
 print(f'\t{len(resolved)} resolved halos to analyze.\n\tLoading {args.simulation}-00{args.timestep}...')
 
 s = pynbody.load(simpath)
@@ -67,15 +59,11 @@ print('\tWriting: 0.00%')
 with pymp.Parallel(args.numproc) as pl:
     for i in pl.xrange(len(resolved)):
         halo = h[resolved[i]]
-        if resolved[i] in luminous: lum = True
         current = {'Mvir':np.nan,'Mstar':np.nan,'Mgas':np.nan}
 
         try:
             pynbody.analysis.halo.center(halo)
-            if lum:
-                Rvir = Data[args.simulation][args.timestep]['luminous'][str(resolved[i])]['Rvir']
-            else:
-                Rvir = Data[args.simulation][args.timestep]['dark'][str(resolved[i])]['Rvir']
+            Rvir = Data[args.simulation][args.timestep]['halos'][str(resolved[i])]['Rvir']
             sphere = pynbody.filt.Sphere(.1*Rvir,(0,0,0))
             current['Mvir'] = halo[sphere]['mass'].sum()
             current['Mgas'] = halo.g[sphere]['mass'].sum()
@@ -88,14 +76,10 @@ with pymp.Parallel(args.numproc) as pl:
         InnerData[str(resolved[i])] = current
         del current
 
-for halo in luminous:
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
-for halo in dark:
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
+for halo in resolved:
+    Data[args.simulation][args.timestep]['halos'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
+    Data[args.simulation][args.timestep]['halos'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
+    Data[args.simulation][args.timestep]['halos'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
 
 out = open('BaryonicFractionData.pickle','wb')
 pickle.dump(Data,out)
