@@ -89,13 +89,13 @@ with pymp.Parallel(args.numproc) as pl:
         del current
 
 for halo in luminous:
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mvir_Inner'] = InnerData[halo]['Mvir']
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mgas_Inner'] = InnerData[halo]['Mgas']
-    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mstar_Inner'] = InnerData[halo]['Mstar']
+    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
+    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
+    Data[args.simulation][args.timestep]['luminous'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
 for halo in dark:
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mvir_Inner'] = InnerData[halo]['Mvir']
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mgas_Inner'] = InnerData[halo]['Mgas']
-    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mstar_Inner'] = InnerData[halo]['Mstar']
+    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
+    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
+    Data[args.simulation][args.timestep]['dark'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
 
 out = open('BaryonicFractionData.pickle','wb')
 pickle.dump(Data,out)
