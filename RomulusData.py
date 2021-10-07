@@ -32,7 +32,7 @@ s.physical_units()
 h = s.halos(dosort=True)
 SharedData = pymp.shared.dict()
 prog=pymp.shared.array((1,),dtype=int)
-myprint(f'{args.simulation} Loaded.')
+myprint(f'{args.simulation} Loaded. {len(halos)} halos to analyze.\nWriting: 0.00%')
 
 with pymp.Parallel(10) as pl:
     for i in pl.xrange(len(halos)):
