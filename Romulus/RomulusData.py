@@ -51,7 +51,9 @@ with pymp.Parallel(10) as pl:
             current['Mgas_Inner'] = halo.g[sphere]['mass'].sum()
             current['Mstar_Inner'] = halo.s[sphere]['mass'].sum()
         except:
-            pass
+            current['Mvir_Inner'] = np.nan
+            current['Mgas_Inner'] = np.nan
+            current['Mstar_Inner'] = np.nan
 
         prog[0]+=1
         myprint(f'\tWriting {round(prog[0]/len(halos)*100,2)}%',clear=True)
