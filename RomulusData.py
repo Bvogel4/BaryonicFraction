@@ -32,7 +32,7 @@ s.physical_units()
 h = s.halos(dosort=True)
 SharedData = pymp.shared.dict()
 prog=pymp.shared.array((1,),dtype=int)
-myprint(f'{args.simulation} Loaded. {len(halos)} halos to analyze.\nWriting: 0.00%')
+myprint(f'{args.simulation} Loaded. {len(halos)} halos to analyze.\nWriting: 0.00%',clear=True)
 
 with pymp.Parallel(10) as pl:
     for i in pl.xrange(len(halos)):
@@ -69,4 +69,4 @@ for j in halos:
 out = open('RomulusData.pickle','wb')
 pickle.dump(Data,out)
 out.close()
-myprint('Data File Updated',myprint=True)
+myprint('Data File Updated',clear=True)
