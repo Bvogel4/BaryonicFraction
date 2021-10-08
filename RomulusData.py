@@ -59,12 +59,14 @@ with pymp.Parallel(10) as pl:
         del current
 
 for j in halos:
-    if j in fdwf: Data['field']['dwarf'][str(j)] = SharedData[str(j)]
-    if j in fudg: Data['field']['udg'][str(j)] = SharedData[str(j)]
-    if j in sdwf: Data['satellite']['dwarf'][str(j)] = SharedData[str(j)]
-    if j in sudg: Data['satellite']['udg'][str(j)] = SharedData[str(j)]
-    if j in cdwf: Data['cluster']['dwarf'][str(j)] = SharedData[str(j)]
-    if j in cudg: Data['cluster']['udg'][str(j)] = SharedData[str(j)]
+    if args.simulation == 'Rom25':
+        if j in fdwf: Data['field']['dwarf'][str(j)] = SharedData[str(j)]
+        if j in fudg: Data['field']['udg'][str(j)] = SharedData[str(j)]
+        if j in sdwf: Data['satellite']['dwarf'][str(j)] = SharedData[str(j)]
+        if j in sudg: Data['satellite']['udg'][str(j)] = SharedData[str(j)]
+    else:
+        if j in cdwf: Data['cluster']['dwarf'][str(j)] = SharedData[str(j)]
+        if j in cudg: Data['cluster']['udg'][str(j)] = SharedData[str(j)]
 
 out = open('RomulusData.pickle','wb')
 pickle.dump(Data,out)
