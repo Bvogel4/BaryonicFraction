@@ -31,7 +31,7 @@ if args.simulation=='Marvel':
 
 else:
     try:
-        Data = pickle.load(open('RomulusData.pickle','rb'))
+        Data = pickle.load(open('Romulus/RomulusData.pickle','rb'))
         cont = input('Data File exists. Erase and continue? y/n: ')
         if cont == 'y' or cont == 'yes': erase = True
     except:
@@ -76,7 +76,7 @@ else:
             for h in cudg:
                 Data['cluster']['udg'][str(h)] = {'Mvir':np.nan,'Mgas':np.nan,'Mstar':np.nan,'Rvir':np.nan,
                                 'Mvir_Inner':np.nan,'Mgas_Inner':np.nan,'Mstar_Inner':np.nan }
-        out = open('RomulusData.pickle','wb')
+        out = open('Romulus/RomulusData.pickle','wb')
         pickle.dump(Data,out)
         out.close()
         print('Empty Data file created.')
