@@ -79,9 +79,9 @@ imagenames = np.sort(np.array(imagenames))
 images,images_inner = [[],[]]
 for name in imagenames:
     if name.split('.')[0]=='Entire':
-        images.append(imageio.imread(f'../Plots/{name}'))
-    else:
-        images_inner.append(imageio.imread(f'../Plots/{name}'))
+        images.append(imageio.imread(f'../GifPlots/{name}'))
+    elif name.split('.')[0]=='Inner':
+        images_inner.append(imageio.imread(f'../GifPlots/{name}'))
 imageio.mimsave('../Plots/EntireBaryonicFraction.gif', images, duration=.15)
 meta = OSXMetaData('../Plots/EntireBaryonicFraction.gif')
 meta.creator='Plot.py'
