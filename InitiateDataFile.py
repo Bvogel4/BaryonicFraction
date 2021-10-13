@@ -8,7 +8,7 @@ erase = False
 
 if args.simulation=='Marvel':
     try:
-        Data = pickle.load(open('BaryonicFractionData.pickle','rb'))
+        Data = pickle.load(open('DataFiles/BaryonicFractionData.pickle','rb'))
         contents = False
         for s in ['cptmarvel','elektra','storm','rogue']:
             if Data[s]:
@@ -23,7 +23,7 @@ if args.simulation=='Marvel':
         Data={}
         for s in ['cptmarvel','elektra','storm','rogue']:
             Data[s] = {}
-        out = open('BaryonicFractionData.pickle','wb')
+        out = open('DataFiles/BaryonicFractionData.pickle','wb')
         pickle.dump(Data,out)
         out.close()
         print('Empty Data file created.')
@@ -31,7 +31,7 @@ if args.simulation=='Marvel':
 
 else:
     try:
-        Data = pickle.load(open('Romulus/RomulusData.pickle','rb'))
+        Data = pickle.load(open('DataFiles/RomulusData.pickle','rb'))
         cont = input('Data File exists. Erase and continue? y/n: ')
         if cont == 'y' or cont == 'yes': erase = True
     except:
@@ -76,7 +76,7 @@ else:
             for h in cudg:
                 Data['cluster']['udg'][str(h)] = {'Mvir':np.nan,'Mgas':np.nan,'Mstar':np.nan,'Rvir':np.nan,
                                 'Mvir_Inner':np.nan,'Mgas_Inner':np.nan,'Mstar_Inner':np.nan }
-        out = open('Romulus/RomulusData.pickle','wb')
+        out = open('DataFiles/RomulusData.pickle','wb')
         pickle.dump(Data,out)
         out.close()
         print('Empty Data file created.')

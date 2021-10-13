@@ -8,4 +8,4 @@ for sim in ['cptmarvel','elektra','storm','rogue']:
     steps.reverse()
     for ts in steps:
         print(f'Running {sim}-00{ts}:')
-        os.system(f'{pythonpath} BaryonicFractionData.py -s {sim} -t {ts} -n 10')
+        os.system(f'{pythonpath} Code/BaryonicFractionData.py -s {sim} -t {ts} -n 10')

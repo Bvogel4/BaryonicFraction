@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pylab as plt
 from osxmetadata import OSXMetaData
 
-Data = pickle.load(open('RomulusData.pickle','rb'))
+Data = pickle.load(open('../DataFiles/RomulusData.pickle','rb'))
 
 Plots={'field':{'dwarf':[],'udg':[]},
         'satellite':{'dwarf':[],'udg':[]},

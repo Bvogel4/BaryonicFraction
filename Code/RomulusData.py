@@ -11,7 +11,7 @@ parser.add_argument("-s","--simulation",choices=['Rom25','RomC'],required=True)
 args = parser.parse_args()
 
 fudg,fdwf,sudg,sdwf,cudg,cdwf=[[],[],[],[],[],[]]
-Data = pickle.load(open('RomulusData.pickle','rb'))
+Data = pickle.load(open('../DataFiles/RomulusData.pickle','rb'))
 for h in Data['field']['dwarf']: fdwf.append(int(h))
 for h in Data['field']['udg']: fudg.append(int(h))
 for h in Data['satellite']['dwarf']: sdwf.append(int(h))
@@ -70,7 +70,7 @@ for j in halos:
         if j in cdwf: Data['cluster']['dwarf'][str(j)] = SharedData[str(j)]
         if j in cudg: Data['cluster']['udg'][str(j)] = SharedData[str(j)]
 
-out = open('RomulusData.pickle','wb')
+out = open('../DataFiles/RomulusData.pickle','wb')
 pickle.dump(Data,out)
 out.close()
 myprint('Data File Updated',clear=True)

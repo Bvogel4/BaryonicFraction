@@ -7,7 +7,7 @@ mint = [1.29,1.94,2.2,2.5,3,3.8,4,4.4,4.7,5,5.17,5.5,6.05,6.4,6.7,7.2,7.7,8,8.3,
         8.6,9,9.4,9.8,10,10.6,10.8,11,11.5,11.9,12.1,12.4,12.8,13.3,13.7]
 maxt = [1.3,2.16,2.3,2.6,3.3,3.9,4.3,4.6,4.9,5.16,5.5,5.8,6.2,6.5,6.9,7.5,7.8,8.2,8.6,
         8.9,9.1,9.7,10,10.4,10.8,11,11.3,11.6,12.1,12.3,12.6,12.9,13.6,13.8]
-Data = pickle.load(open('BaryonicFractionData.pickle','rb'))
+Data = pickle.load(open('../DataFiles/BaryonicFractionData.pickle','rb'))
 Plots = {'times':[],'dark':[],'luminous':[],'dark_Inner':[],'luminous_Inner':[]}
 
 sims,times = [['cptmarvel','elektra','storm','rogue'],[]]
@@ -47,8 +47,8 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.hist(Plots['luminous'][i],bins,histtype='step',color='navy',linewidth=3)
     ax.hist(Plots['luminous'][i],bins,color='cornflowerblue',alpha=.7)
     ax.legend(loc='upper left',prop={'size':15})
-    f.savefig(f'GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'../GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/Entire.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='Plot.py'
     plt.close()
 
@@ -69,22 +69,22 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.hist(Plots['luminous_Inner'][i],bins,histtype='step',color='navy',linewidth=3)
     ax.hist(Plots['luminous_Inner'][i],bins,color='cornflowerblue',alpha=.7)
     ax.legend(loc='upper left',prop={'size':15})
-    f.savefig(f'GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'../GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/Inner.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='Plot.py'
     plt.close()
 
-imagenames = os.listdir('GifPlots/')
+imagenames = os.listdir('../GifPlots/')
 imagenames = np.sort(np.array(imagenames))
 images,images_inner = [[],[]]
 for name in imagenames:
     if name.split('.')[0]=='Entire':
-        images.append(imageio.imread(f'Plots/{name}'))
+        images.append(imageio.imread(f'../Plots/{name}'))
     else:
-        images_inner.append(imageio.imread(f'Plots/{name}'))
-imageio.mimsave('Plots/EntireBaryonicFraction.gif', images, duration=.15)
-meta = OSXMetaData('Plots/EntireBaryonicFraction.gif')
+        images_inner.append(imageio.imread(f'../Plots/{name}'))
+imageio.mimsave('../Plots/EntireBaryonicFraction.gif', images, duration=.15)
+meta = OSXMetaData('../Plots/EntireBaryonicFraction.gif')
 meta.creator='Plot.py'
-imageio.mimsave('Plots/InnerBaryonicFraction.gif', images_inner, duration=.15)
-meta = OSXMetaData('Plots/InnerBaryonicFraction.gif')
+imageio.mimsave('../Plots/InnerBaryonicFraction.gif', images_inner, duration=.15)
+meta = OSXMetaData('../Plots/InnerBaryonicFraction.gif')
 meta.creator='Plot.py'
