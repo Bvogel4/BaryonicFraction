@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 #Verify that data file exists, and that the timestep hasn't already been calculated
 try:
-    Data = pickle.load(open('../DataFiles/BaryonicFractionData.pickle','rb'))
+    Data = pickle.load(open('DataFiles/BaryonicFractionData.pickle','rb'))
 except:
     print('Please initiate Data File')
     sys.exit()
@@ -84,7 +84,7 @@ for halo in resolved:
     Data[args.simulation][args.timestep]['halos'][str(halo)]['MHI_Inner'] = InnerData[str(halo)]['MHI_Inner']
     Data[args.simulation][args.timestep]['halos'][str(halo)]['MHI'] = InnerData[str(halo)]['MHI']
 
-out = open('../DataFiles/BaryonicFractionData.pickle','wb')
+out = open('DataFiles/BaryonicFractionData.pickle','wb')
 pickle.dump(Data,out)
 out.close()
 myprint(f'\tData File Updated with {args.simulation}-00{args.timestep}',clear=True)
