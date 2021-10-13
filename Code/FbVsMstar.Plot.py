@@ -26,6 +26,8 @@ for i in np.arange(len(mint)):
                         Plots['Fb_Inner'][-1].append(float((halo['Mstar_Inner']+halo['Mgas_Inner'])/halo['Mvir_Inner']))
                         Plots['Mstar'][-1].append(halo['Mstar'])
 
+stellarbins = np.linspace(2,10,9)
+
 for i in np.flip(np.arange(len(Plots['times']))):
     f,ax = plt.subplots(1,1,figsize=(11,8))
     ax.set_xlabel(r'M$_*$',fontsize=25)
@@ -37,8 +39,8 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.semilogx()
     ax.text(4e7,2e-7,f'Time: {round(Plots["times"][i],2)} Gyr',fontsize=25)
     ax.scatter(Plots['Mstar'][i],Plots['Fb'][i],c='k')
-    f.savefig(f'../GifPlots/Observed.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'../GifPlots/Observed.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'../GifPlots/FbVsMstar.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/FbVsMstar.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='FbVsMstar.Plot.py'
     plt.close()
 
@@ -52,22 +54,72 @@ for i in np.flip(np.arange(len(Plots['times']))):
     ax.semilogx()
     ax.text(4e7,2e-7,f'Time: {round(Plots["times"][i],2)} Gyr',fontsize=25)
     ax.scatter(Plots['Mstar'][i],Plots['Fb_Inner'][i],c='k')
-    f.savefig(f'../GifPlots/ObservedInner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
-    meta = OSXMetaData(f'../GifPlots/ObservedInner.{int(Plots["times"][i]*100):04d}.png')
+    f.savefig(f'../GifPlots/FbInnerVsMstar.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/FbInnerVsMstar.{int(Plots["times"][i]*100):04d}.png')
     meta.creator='FbVsMstar.Plot.py'
     plt.close()
 
+    f1,ax1 = plt.subplots(1,1,figsize=(11,8))
+    ax1.set_ylabel('N',fontsize=25)
+    ax1.set_xlabel(r'f$_{b}$ within .Rvir',fontsize=25)
+    ax1.tick_params(length=5,labelsize=15)
+    ax1.set_xlim([1e-7,1])
+    ax1.semilogx()
+    ax1.set_ylim([6e-1,2e3])
+    ax1.semilogy()
+    ax1.text(1e-2,1e3,f'Time: {round(Plots["times"][i],2)} Gyr',fontsize=25)
+    f2,ax2 = plt.subplots(1,1,figsize=(11,8))
+    ax2.set_ylabel('N',fontsize=25)
+    ax2.set_xlabel(r'f$_{b}$ within .1*Rvir',fontsize=25)
+    ax2.tick_params(length=5,labelsize=15)
+    ax2.set_xlim([1e-7,1])
+    ax2.semilogx()
+    ax2.set_ylim([6e-1,2e3])
+    ax2.semilogy()
+    ax2.text(1e-2,1e3,f'Time: {round(Plots["times"][i],2)} Gyr',fontsize=25)
+    bins = np.logspace(-7,1,50)
+    for j in np.arange(len(stellarbins)-1):
+        Fb,Fb_Inner= [[],[]]
+        for ind in np.arange(len(Plots['Mstar'][i])):
+            if stellarbins[j]<np.log10(Plots['Mstar'][i][ind])<stellarbins[j+1]:
+                Fb.append(Plots['Fb'][i][ind])
+                Fb_Inner.append(Plots['Fb_Inner'][i][ind])
+        ax1.plot(0,0,color=plt.get_cmap('hsv')(1*j/(len(stellarbins)-1)),linewidth=2,label=f'{stellarbins[j]}'+r'$<$Log$_{10}$(M$_*$)$<$'+f'{stellarbins[j+1]}')
+        ax2.plot(0,0,color=plt.get_cmap('hsv')(1*j/(len(stellarbins)-1)),linewidth=2,label=f'{stellarbins[j]}'+r'$<$Log$_{10}$(M$_*$)$<$'+f'{stellarbins[j+1]}')
+        ax1.hist(Fb,bins,histtype='step',color=plt.get_cmap('hsv')(1*j/(len(stellarbins)-1)),linewidth=3)
+        ax2.hist(Fb_Inner,bins,histtype='step',color=plt.get_cmap('hsv')(1*j/(len(stellarbins)-1)),linewidth=3)
+    ax1.legend(loc='upper left',prop={'size':15})
+    f1.savefig(f'../GifPlots/FbStellarBins.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/FbStellarBins.{int(Plots["times"][i]*100):04d}.png')
+    meta.creator='FbVsMstar.Plot.py'
+    ax2.legend(loc='upper left',prop={'size':15})
+    f2.savefig(f'../GifPlots/FbStellarBinsInner.{int(Plots["times"][i]*100):04d}.png',bbox_inches='tight',pad_inches=.1)
+    meta = OSXMetaData(f'../GifPlots/FbStellarBinsInner.{int(Plots["times"][i]*100):04d}.png')
+    meta.creator='FbVsMstar.Plot.py'
+    plt.close(f1)
+    plt.close(f2)
+
 imagenames = os.listdir('../GifPlots/')
 imagenames = np.sort(np.array(imagenames))
-images,images_inner = [[],[]]
+images,images_inner,binimages,binimages_inner = [[],[],[],[]]
 for name in imagenames:
-    if name.split('.')[0]=='Observed':
+    if name.split('.')[0]=='FbVsMstar':
         images.append(imageio.imread(f'../GifPlots/{name}'))
-    elif name.split('.')[0]=='ObservedInner':
+    elif name.split('.')[0]=='FbInnerVsMstar':
         images_inner.append(imageio.imread(f'../GifPlots/{name}'))
-imageio.mimsave('../Plots/ObservedBaryonicFraction.gif', images, duration=.15)
-meta = OSXMetaData('../Plots/ObservedBaryonicFraction.gif')
+    elif name.split('.')[0]=='FbStellarBins':
+        binimages.append(imageio.imread(f'../GifPlots/{name}'))
+    elif name.split('.')[0]=='FbStellarBinsInner':
+        binimages_inner.append(imageio.imread(f'../GifPlots/{name}'))
+imageio.mimsave('../Plots/FbVsMstar.gif', images, duration=.15)
+meta = OSXMetaData('../Plots/FbVsMstar.gif')
 meta.creator='FbVsMstar.Plot.py'
-imageio.mimsave('../Plots/ObservedInnerBaryonicFraction.gif', images_inner, duration=.15)
-meta = OSXMetaData('../Plots/ObservedInnerBaryonicFraction.gif')
+imageio.mimsave('../Plots/FbInnerVsMstar.gif', images_inner, duration=.15)
+meta = OSXMetaData('../Plots/FbInnerVsMstar.gif')
+meta.creator='FbVsMstar.Plot.py'
+imageio.mimsave('../Plots/FbStellarBins.gif',binimages, duration=.15)
+meta = OSXMetaData('../Plots/FbStellarBins.gif')
+meta.creator='FbVsMstar.Plot.py'
+imageio.mimsave('../Plots/FbStellarBinsInner.gif', binimages_inner, duration=.15)
+meta = OSXMetaData('../Plots/FbStellarBinsInner.gif')
 meta.creator='FbVsMstar.Plot.py'
