@@ -59,7 +59,7 @@ print('\tWriting: 0.00%')
 with pymp.Parallel(args.numproc) as pl:
     for i in pl.xrange(len(resolved)):
         halo = h[resolved[i]]
-        current = {'Mvir':np.nan,'Mstar':np.nan,'Mgas':np.nan}
+        current = {'Mvir':np.nan,'Mstar':np.nan,'Mgas':np.nan,'MHI_Inner':np.nan,'MHI':sum(halo.g['HI']*halo.g['mass'])}
 
         try:
             pynbody.analysis.halo.center(halo)
@@ -68,6 +68,7 @@ with pymp.Parallel(args.numproc) as pl:
             current['Mvir'] = halo[sphere]['mass'].sum()
             current['Mgas'] = halo.g[sphere]['mass'].sum()
             current['Mstar'] = halo.s[sphere]['mass'].sum()
+            current['MHI_Inner'] = sum(halo.g[sphere]['HI']*halo.g[sphere]['mass'])
         except:
             pass
 
@@ -80,6 +81,8 @@ for halo in resolved:
     Data[args.simulation][args.timestep]['halos'][str(halo)]['Mvir_Inner'] = InnerData[str(halo)]['Mvir']
     Data[args.simulation][args.timestep]['halos'][str(halo)]['Mgas_Inner'] = InnerData[str(halo)]['Mgas']
     Data[args.simulation][args.timestep]['halos'][str(halo)]['Mstar_Inner'] = InnerData[str(halo)]['Mstar']
+    Data[args.simulation][args.timestep]['halos'][str(halo)]['MHI_Inner'] = InnerData[str(halo)]['MHI_Inner']
+    Data[args.simulation][args.timestep]['halos'][str(halo)]['MHI'] = InnerData[str(halo)]['MHI']
 
 out = open('../DataFiles/BaryonicFractionData.pickle','wb')
 pickle.dump(Data,out)
