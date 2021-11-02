@@ -19,4 +19,4 @@ if args.simulation=='Marvel':
 else:
     for sim in ['cptmarvel','elektra','storm','rogue']:
         print(f'Running {sim}-004096:')
-        os.system(f'{pythonpath} Code/BaryonicFractionData.py -s {sim} -n 10')
+        os.system(f'{pythonpath} Code/Marvel.z0.py -s {sim} -n 10')
