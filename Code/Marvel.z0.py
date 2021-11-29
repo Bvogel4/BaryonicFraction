@@ -57,9 +57,9 @@ print('\tWriting: 0.00%')
 with pymp.Parallel(args.numproc) as pl:
     for i in pl.xrange(len(resolved)):
         halo = h[resolved[i]]
-        current = {'MHI':sum(halo.g['HI']*halo.g['mass']),
-                    '.1Mvir':np.nan,'.1Mstar':np.nan,'.1Mgas':np.nan,'.1MHI':np.nan,
-                    '.01Mvir':np.nan,'.01Mstar':np.nan,'.01Mgas':np.nan,'.01MHI':np.nan}
+        current = {'MHI':sum(halo.g['HI']*halo.g['mass']),'MHII':sum(halo.g['HII']*halo.g['mass']),
+                    '.1Mvir':np.nan,'.1Mstar':np.nan,'.1Mgas':np.nan,'.1MHI':np.nan,'.1MHII':np.nan,
+                    '.01Mvir':np.nan,'.01Mstar':np.nan,'.01Mgas':np.nan,'.01MHI':np.nan,',01MHII':np.nan}
 
         try:
             pynbody.analysis.halo.center(halo)
@@ -69,11 +69,13 @@ with pymp.Parallel(args.numproc) as pl:
             current['.1Mgas'] = halo.g[sphere]['mass'].sum()
             current['.1Mstar'] = halo.s[sphere]['mass'].sum()
             current['.1MHI'] = sum(halo.g[sphere]['HI']*halo.g[sphere]['mass'])
+            current['.1MHII'] = sum(halo.g[sphere]['HII']*halo.g[sphere]['mass'])
             sphere = pynbody.filt.Sphere(.01*Rvir,(0,0,0)) if .01*Rvir>.2 else pynbody.filt.Sphere(.2,(0,0,0))
             current['.01Mvir'] = halo[sphere]['mass'].sum()
             current['.01Mgas'] = halo.g[sphere]['mass'].sum()
             current['.01Mstar'] = halo.s[sphere]['mass'].sum()
             current['.01MHI'] = sum(halo.g[sphere]['HI']*halo.g[sphere]['mass'])
+            current['.01MHII'] = sum(halo.g[sphere]['HII']*halo.g[sphere]['mass'])
         except:
             pass
 
@@ -84,14 +86,17 @@ with pymp.Parallel(args.numproc) as pl:
 
 for halo in resolved:
     Data[args.simulation][str(halo)]['MHI'] = InnerData[str(halo)]['MHI']
+    Data[args.simulation][str(halo)]['MHII'] = InnerData[str(halo)]['MHII']
     Data[args.simulation][str(halo)]['.1Mvir'] = InnerData[str(halo)]['.1Mvir']
     Data[args.simulation][str(halo)]['.1Mgas'] = InnerData[str(halo)]['.1Mgas']
     Data[args.simulation][str(halo)]['.1Mstar'] = InnerData[str(halo)]['.1Mstar']
     Data[args.simulation][str(halo)]['.1MHI'] = InnerData[str(halo)]['.1MHI']
+    Data[args.simulation][str(halo)]['.1MHII'] = InnerData[str(halo)]['.1MHII']
     Data[args.simulation][str(halo)]['.01Mvir'] = InnerData[str(halo)]['.01Mvir']
     Data[args.simulation][str(halo)]['.01Mgas'] = InnerData[str(halo)]['.01Mgas']
     Data[args.simulation][str(halo)]['.01Mstar'] = InnerData[str(halo)]['.01Mstar']
     Data[args.simulation][str(halo)]['.01MHI'] = InnerData[str(halo)]['.01MHI']
+    Data[args.simulation][str(halo)]['.01MHII'] = InnerData[str(halo)]['.01MHII']
 
 out = open('DataFiles/Marvel.z0.pickle','wb')
 pickle.dump(Data,out)
