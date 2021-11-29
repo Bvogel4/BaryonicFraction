@@ -86,7 +86,7 @@ for t in [0,1,2]:
 
     f,ax = plt.subplots(1,1,figsize=(11,8))
     ax.set_ylabel('N',fontsize=25)
-    ax.set_xlabel(r'Gas f$_{b}$ within '+c2[t]+r'R$_{vir}$',fontsize=25)
+    ax.set_xlabel(r'f$_{gas}$ within '+c2[t]+r'R$_{vir}$',fontsize=25)
     ax.tick_params(length=5,labelsize=15)
     ax.set_xlim([1e-6,1])
     ax.semilogx()
@@ -108,7 +108,7 @@ for t in [0,1,2]:
 
     f,ax = plt.subplots(1,1,figsize=(11,8))
     ax.set_ylabel('N',fontsize=25)
-    ax.set_xlabel(r'Stellar f$_{b}$ within '+c2[t]+r'R$_{vir}$',fontsize=25)
+    ax.set_xlabel(r'f$_{stellar}$ within '+c2[t]+r'R$_{vir}$',fontsize=25)
     ax.tick_params(length=5,labelsize=15)
     ax.set_xlim([10**(-6.2),1])
     ax.semilogx()
