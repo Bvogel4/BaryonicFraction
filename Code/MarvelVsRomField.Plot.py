@@ -25,8 +25,9 @@ MarBf,MarBf_Inner=[[],[]]
 for sim in Marvel:
     for h in Marvel[sim]['4096']['halos']:
         halo = Marvel[sim]['4096']['halos'][h]
-        MarBf.append((float(halo['Mstar'])+float(halo['Mgas']))/float(halo['Mvir']))
-        MarBf_Inner.append((float(halo['Mstar_Inner'])+float(halo['Mgas_Inner']))/float(halo['Mvir_Inner']))
+        if halo['Mstar']>1e7:
+            MarBf.append((float(halo['Mstar'])+float(halo['Mgas']))/float(halo['Mvir']))
+            MarBf_Inner.append((float(halo['Mstar_Inner'])+float(halo['Mgas_Inner']))/float(halo['Mvir_Inner']))
 
 
 f,ax = plt.subplots(1,1,figsize=(11,8))
