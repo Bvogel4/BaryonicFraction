@@ -37,6 +37,7 @@ for sim in ['cptmarvel','elektra','storm','rogue']:
         FbGE[i] = (1.4*halo['MHI']+halo['MHII'])/halo['Mvir']
         FbGI[i] = (1.4*halo['.1MHI']+halo['.1MHII'])/halo['.1Mvir']
         FbGC[i] = (1.4*halo['.01MHI']+halo['.01MHII'])/halo['.01Mvir']
+        if T[i]>12: print(f'{sim}-{h}: {T[i]} , {FbE[i]}')
         i+=1
 
 loc,typ = ['.Entire','.Inner','.Center'],['','.Observed','.Gas','.Stellar']
@@ -46,16 +47,18 @@ time_bins = np.linspace(0,14,50)
 for l in np.arange(len(loc)):
     for t in np.arange(len(typ)):
         d = data[l][t]
-        bound = np.mean(d)
-        Hi = T[d>bound]
-        Low = T[d<bound]
+        mid = np.mean(d)
+        lower = np.percentile(d,25)
+        upper = np.percentile(d,75)
+        Hi = T[d>upper]
+        Low = T[d<lower]
 
         f,ax = plt.subplots(1,1,figsize=(8,6))
         ax.set_xlabel(r'T$_{LMM}$ [Gyr]',fontsize=15)
         ax.set_ylabel('N',fontsize=15)
         ax.set_xlim([0,14])
         ax.semilogy()
-        ax.plot(0,0,color='navy',linewidth=2,label=r'Hi f$_b$')
+        ax.plot(0,0,color='navy',linewidth=2,label=r'High f$_b$')
         ax.plot(0,0,color='darkred',linewidth=2,label=r'Low f$_b$')
         ax.legend(loc='upper left',prop={'size':15})
 
