@@ -1,7 +1,7 @@
 import argparse,pickle
 import numpy as np
 parser = argparse.ArgumentParser()
-parser.add_argument("-s","--simulation",choices=['Marvel','Romulus','z0'],required=True)
+parser.add_argument("-s","--simulation",choices=['Marvel','Romulus','z0','DCJL'],required=True)
 args = parser.parse_args()
 
 erase = False
@@ -46,6 +46,28 @@ elif args.simulation=='z0':
         for s in ['cptmarvel','elektra','storm','rogue']:
             Data[s] = {}
         out = open('DataFiles/Marvel.z0.pickle','wb')
+        pickle.dump(Data,out)
+        out.close()
+        print('Empty Data file created.')
+
+elif args.simulation=='DCJL':
+    try:
+        Data = pickle.load(open('DataFiles/DCJL.z0.pickle','rb'))
+        contents = False
+        for s in ['h148','h229','h242','h329']:
+            if Data[s]:
+                contents = True
+        if contents:
+            cont  = input('Data File has contents. Erase and continue? y/n: ')
+        if cont == 'y' or cont == 'yes': erase = True
+    except:
+        erase = True
+
+    if erase:
+        Data={}
+        for s in ['h148','h229','h242','h329']:
+            Data[s] = {}
+        out = open('DataFiles/DCJL.z0.pickle','wb')
         pickle.dump(Data,out)
         out.close()
         print('Empty Data file created.')
