@@ -1,12 +1,22 @@
-import pickle
+import argparse,pickle
 import numpy as np
 import matplotlib.pylab as plt
 from osxmetadata import OSXMetaData
 
-Fb = pickle.load(open('../DataFiles/Marvel.z0.pickle','rb'))
-LMM = pickle.load(open('../DataFiles/MergerHistories.Marvel.pickle','rb'))
+parser = argparse.ArgumentParser()
+parser.add_argument("-s","--simulation",choices=['Marvel','DCJL'],required=True)
+args = parser.parse_args()
+
+sims = ['cptmarvel','elektra','storm','rogue'] if args.simulation=='Marvel' else ['h148','h229','h242','h329']
+
+if args.simulation=='Marvel':
+    Fb = pickle.load(open('../DataFiles/Marvel.z0.pickle','rb'))
+    LMM = pickle.load(open('../DataFiles/MergerHistories.Marvel.pickle','rb'))
+else:
+    Fb = pickle.load(open('../DataFiles/DCJL.z0.pickle','rb'))
+    LMM = pickle.load(open('../DataFiles/MergerHistories.DCJL.pickle','rb'))
 Nhalo = 0
-for sim in ['cptmarvel','elektra','storm','rogue']:
+for sim in sims:
     for h in LMM[sim]:
         Nhalo+=1
 
@@ -18,12 +28,13 @@ for i in [T,FbE,FbI,FbC,FbOE,FbOI,FbOC,FbSE,FbSI,FbSC,FbGE,FbGI,FbGC]:
     i[:] = np.NaN
 
 i = 0
-for sim in ['cptmarvel','elektra','storm','rogue']:
+for sim in sims:
     for h in LMM[sim]:
         try:
             T[i] = LMM[sim][h]['times'][np.where(np.array(LMM[sim][h]['ratios'])<4)[0][0]]
         except:
             T[i] = np.NaN
+        #print(f'analyzing {sim}-{h}')
         halo = Fb[sim][h]
         FbE[i] = (halo['Mstar']+halo['Mgas'])/halo['Mvir']
         FbI[i] = (halo['.1Mstar']+halo['.1Mgas'])/halo['.1Mvir']
@@ -67,7 +78,7 @@ for l in np.arange(len(loc)):
         ax.hist(Low,time_bins,histtype='step',color='darkred',linewidth=3)
         ax.hist(Low,time_bins,color='lightcoral',alpha=.7)
 
-        f.savefig(f'../Plots/LMMDistribution{loc[l]}{typ[t]}.png',bbox_inches='tight',pad_inches=.1)
-        meta = OSXMetaData(f'../Plots/LMMDistribution{loc[l]}{typ[t]}.png')
+        f.savefig(f'../Plots/LMMDistribution.{args.simulation}{loc[l]}{typ[t]}.png',bbox_inches='tight',pad_inches=.1)
+        meta = OSXMetaData(f'../Plots/LMMDistribution.{args.simulation}{loc[l]}{typ[t]}.png')
         meta.creator='LMMDistribution.Plot.py'
         plt.close()
