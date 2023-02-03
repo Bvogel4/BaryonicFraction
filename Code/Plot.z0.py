@@ -39,15 +39,15 @@ for s in sims:
             lum = True if halo['Mstar']>0 else False
         for t in [0,1,2]:
             if lum:
-                Plots['dark'+c1[t]].append(float((halo[c2[t]+'Mstar']+halo[c2[t]+'Mgas'])/halo[c2[t]+'Mvir']))
-                ObsPlots['dark'+c1[t]].append(float((.6*halo[c2[t]+'Mstar']+1.33*halo[c2[t]+'MHI'])/halo[c2[t]+'Mvir']))
-                GasPlots['dark'+c1[t]].append(float((1.4*(halo[c2[t]+'MHI']+halo[c2[t]+'MHII']))/halo[c2[t]+'Mvir']))
-                StarPlots['dark'+c1[t]].append(float(halo[c2[t]+'Mstar']/halo[c2[t]+'Mvir']))
-            else:
                 Plots['luminous'+c1[t]].append(float((halo[c2[t]+'Mstar']+halo[c2[t]+'Mgas'])/halo[c2[t]+'Mvir']))
                 ObsPlots['luminous'+c1[t]].append(float((.6*halo[c2[t]+'Mstar']+1.33*halo[c2[t]+'MHI'])/halo[c2[t]+'Mvir']))
                 GasPlots['luminous'+c1[t]].append(float((1.4*(halo[c2[t]+'MHI']+halo[c2[t]+'MHII']))/halo[c2[t]+'Mvir']))
                 StarPlots['luminous'+c1[t]].append(float(halo[c2[t]+'Mstar']/halo[c2[t]+'Mvir']))
+            else:
+                Plots['dark'+c1[t]].append(float((halo[c2[t]+'Mstar']+halo[c2[t]+'Mgas'])/halo[c2[t]+'Mvir']))
+                ObsPlots['dark'+c1[t]].append(float((.6*halo[c2[t]+'Mstar']+1.33*halo[c2[t]+'MHI'])/halo[c2[t]+'Mvir']))
+                GasPlots['dark'+c1[t]].append(float((1.4*(halo[c2[t]+'MHI']+halo[c2[t]+'MHII']))/halo[c2[t]+'Mvir']))
+                StarPlots['dark'+c1[t]].append(float(halo[c2[t]+'Mstar']/halo[c2[t]+'Mvir']))
 
 titles = ['Entire','Inner','Center']
 for t in [0,1,2]:
