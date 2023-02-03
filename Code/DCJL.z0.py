@@ -41,7 +41,7 @@ for line in stat:
     grp = int(line.split()[0])
     ngas = int(line.split()[2])
     nstar = int(line.split()[3])
-    if ngas > 0:
+    if ngas > 0 or nstar > 0:
         resolved.append(grp)
         Data[args.simulation][str(grp)] = {'Rvir':float(line.split()[6]),
                                             'Mvir':float(line.split()[5]),
