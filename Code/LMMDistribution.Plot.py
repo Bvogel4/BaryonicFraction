@@ -1,7 +1,7 @@
 import argparse,pickle
 import numpy as np
 import matplotlib.pylab as plt
-from osxmetadata import OSXMetaData
+#from osxmetadata import OSXMetaData
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s","--simulation",choices=['Marvel','DCJL'],required=True)
@@ -25,7 +25,7 @@ T,FbE,FbI,FbC,FbOE,FbOI,FbOC,FbSE,FbSI,FbSC,FbGE,FbGI,FbGC = [np.empty(Nhalo),np
                                                               np.empty(Nhalo),np.empty(Nhalo),np.empty(Nhalo),
                                                               np.empty(Nhalo),np.empty(Nhalo),np.empty(Nhalo),np.empty(Nhalo)]
 for i in [T,FbE,FbI,FbC,FbOE,FbOI,FbOC,FbSE,FbSI,FbSC,FbGE,FbGI,FbGC]:
-    i[:] = np.NaN
+    i[:] = np.nan
 
 i = 0
 for sim in sims:
@@ -33,9 +33,11 @@ for sim in sims:
         try:
             T[i] = LMM[sim][h]['times'][np.where(np.array(LMM[sim][h]['ratios'])<4)[0][0]]
         except:
-            T[i] = np.NaN
-        #print(f'analyzing {sim}-{h}')
-        halo = Fb[sim][h]
+            T[i] = np.nan
+        #make sure halo is in the Fb dictionary
+        if str(h) not in Fb[sim].keys(): continue
+        print(f'analyzing {sim}-{h}')
+        halo = Fb[sim][str(h)]
         FbE[i] = (halo['Mstar']+halo['Mgas'])/halo['Mvir']
         FbI[i] = (halo['.1Mstar']+halo['.1Mgas'])/halo['.1Mvir']
         FbC[i] = (halo['.01Mstar']+halo['.01Mgas'])/halo['.01Mvir']
@@ -79,6 +81,6 @@ for l in np.arange(len(loc)):
         ax.hist(Low,time_bins,color='lightcoral',alpha=.7)
 
         f.savefig(f'../Plots/LMMDistribution.{args.simulation}{loc[l]}{typ[t]}.png',bbox_inches='tight',pad_inches=.1)
-        meta = OSXMetaData(f'../Plots/LMMDistribution.{args.simulation}{loc[l]}{typ[t]}.png')
-        meta.creator='LMMDistribution.Plot.py'
+        # meta = OSXMetaData(f'../Plots/LMMDistribution.{args.simulation}{loc[l]}{typ[t]}.png')
+        # meta.creator='LMMDistribution.Plot.py'
         plt.close()
