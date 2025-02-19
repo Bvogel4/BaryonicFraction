@@ -18,9 +18,9 @@ Fb_dcjl = pickle.load(open('../DataFiles/DCJL.z0.pickle','rb'))
 #combine the dictionaries
 Fb = {**Fb_marvel,**Fb_dcjl}
 
-all = '../DataFiles/last_major_mergers_all.pkl'
-hybrid = '../DataFiles/last_major_mergers_hybrid.pkl'
-stellar_only = '../DataFiles/last_major_mergers_stellar_only.pkl'
+all = '../DataFiles/major_mergers_all.pkl'
+hybrid = '../DataFiles/major_mergers_hybrid.pkl'
+stellar_only = '../DataFiles/major_mergers_stellar_only.pkl'
 
 #LMM = pickle.load(open('../DataFiles/MergerHistories.Both.pickle','rb'))
 LMM = pickle.load(open(all,'rb'))
