@@ -61,6 +61,10 @@ for type in ['old','all','stellar_only','hybrid']:
 
         i = 0
         for sim in Fb:
+            #check that sim is in LMM
+            if sim not in LMM:
+                print(f'{sim} not in LMM dictionary')
+                continue
             for h in Fb[sim]:
                 if str(h) not in LMM[sim].keys():
         # for sim in LMM:
