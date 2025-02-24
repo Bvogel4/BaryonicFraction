@@ -6,6 +6,7 @@ import pymp
 import os
 import re
 from glob import glob
+
 from scipy import stats
 import traceback
 
@@ -60,23 +61,46 @@ def find_simulation_snapshots(sim_path):
     for step, path in snapshot_info:
         iord_file = f"{path}.iord"
         if not os.path.exists(iord_file):
-            print(f"Warning: Missing .iord file for snapshot {step}")
+            print(f'{iord_file} does not exist')
+            print(f'removing {path} from list')
             snapshot_info.remove((step, path))
+        # also check for .param file
+        param_file = f"{path}.param"
+        if not os.path.exists(param_file):
+            print(f'{param_file} does not exist')
+            full_sim_name = base_path.name
+            #try and read it from sim level param file
+            sim_param_file = f"{base_path}/{full_sim_name}.param"
+            if not os.path.exists(sim_param_file):
+                #print(f"Warning: Missing .param file for snapshot {step}")
+                print(f'{sim_param_file} does not exist')
+                snapshot_info.remove((step, path))
+            #if it does exist create a symlink to it
+            else:
+                print(f"Creating symlink to sim level param file for snapshot {step}")
+                os.symlink(sim_param_file,param_file)
 
     # print mode of step_diffs
     mode = stats.mode(step_diffs)[0]
     print(f"Most common step difference: {mode}")
 
-    if sim_name == 'cptmarvel':
-        # use only snapshots that are 128 steps apart
-        snapshot_info = [info for info in snapshot_info if info[0] % mode == 0]
-        print(
-            f"Using {len(snapshot_info)} snapshots with step difference {mode}")
-        print(f"Snapshot steps: {sorted([step for step, _ in snapshot_info])}")
+    # if sim_name in ['cptmarvel']:
+    #     # use only snapshots that are 128 steps apart
+    #     snapshot_info = [info for info in snapshot_info if info[0] % mode == 0]
+    #     steps = [step for step, _ in snapshot_info]
+    #     step_diffs = np.diff(steps)
+    #     print(f"Snapshot step differences: {step_diffs}")
+    #
+    # if sim_name in ['h229','h242','h329']:
+    # use only snapshots that are multples of 32 apart, eg 64,96,128
+    snapshot_info = [info for info in snapshot_info if info[0] % 32 == 0]
+    print(
+        f"Using {len(snapshot_info)} snapshots with step difference 32")
 
     steps = [step for step, _ in snapshot_info]
     step_diffs = np.diff(steps)
     print(f"Snapshot step differences: {step_diffs}")
+    
 
     # Return the sorted paths
     return [path for _, path in snapshot_info]
@@ -562,12 +586,13 @@ def analyze_merger_history(sim_path, halos_to_use, num_snapshots=None,
             del later_halos
             later_sim = earlier_sim
             later_halos = earlier_halos
-            # Clear references to earlier snapshot
+            # # Clear references to earlier snapshot
             earlier_sim = None
             earlier_halos = None
 
         except Exception as e:
             print(f"Error processing snapshots: {e}")
+            traceback.print_exc()
             # Clean up on error
             if later_sim is not None:
                 del later_sim
@@ -666,24 +691,50 @@ import pickle
 # list halos to use starting at z = 0
 # read halos to use from file '../DataFiles/Marvel.z0.pickle'
 Marvel_z0 = pickle.load(open('../DataFiles/Marvel.z0.pickle', 'rb'))
+DCJL_z0 = pickle.load(open('../DataFiles/DCJL.z0.pickle', 'rb'))
 
-halos_to_use = list(Marvel_z0['storm'].keys())
-# convert to list of ints
-halos_to_use = [int(halo) for halo in halos_to_use]
-print(halos_to_use)
-sim_path = '/data/REPOSITORY/dwarf_volumes/cptmarvel.cosmo25cmb.4096g5HbwK1BH/cptmarvel.cosmo25cmb.4096g5HbwK1BH.004096/ahf_200/cptmarvel.cosmo25cmb.4096g5HbwK1BH.004096'
-sims = ['cptmarvel', 'elektra', 'storm', 'rogue']
-base_path = '/data/REPOSITORY/dwarf_volumes'
+# sim_path = '/data/REPOSITORY/dwarf_volumes/cptmarvel.cosmo25cmb.4096g5HbwK1BH/cptmarvel.cosmo25cmb.4096g5HbwK1BH.004096/ahf_200/cptmarvel.cosmo25cmb.4096g5HbwK1BH.004096'
+# sims = ['cptmarvel', 'elektra', 'storm', 'rogue']
+# base_path = '/data/REPOSITORY/dwarf_volumes'
+# for sim in sims:
+#     halos_to_use = list(Marvel_z0[sim].keys())
+#     # convert to list of ints
+#     halos_to_use = [int(halo) for halo in halos_to_use]
+#     print(f'Analyzing {sim}')
+#     sim_path = f'{base_path}/{sim}.cosmo25cmb.4096g5HbwK1BH/{sim}.cosmo25cmb.4096g5HbwK1BH.004096/ahf_200/{sim}.cosmo25cmb.4096g5HbwK1BH.004096'
+#     print(sim_path)
+#     # get merger history
+#     history_df = analyze_merger_history(sim_path, halos_to_use, num_threads=25)
+#     # save to file
+#     with open(f'../DataFiles/{sim}.merger_history.pkl', 'wb') as f:
+#         pickle.dump(history_df, f)
+# sims = ['h148']
+# base_path = '/data/REPOSITORY/e12Gals'
+# for sim in sims:
+#     halos_to_use = list(DCJL_z0[sim].keys())
+#     # convert to list of ints
+#     halos_to_use = [int(halo) for halo in halos_to_use]
+#     print(f'Analyzing {sim}')
+#     sim_path = f'{base_path}/{sim}.cosmo50PLK.3072g3HbwK1BH/{sim}.cosmo50PLK.3072g3HbwK1BH.004096/ahf_200/{sim}.cosmo50PLK.3072g3HbwK1BH.004096'
+#     print(sim_path)
+#     # get merger history
+#     history_df = analyze_merger_history(sim_path, halos_to_use, num_threads=25)
+#     # save to file
+#     with open(f'../DataFiles/{sim}.merger_history.pkl', 'wb') as f:
+#         pickle.dump(history_df, f)
+
+sims = ['h229','h242','h329']
+sims = ['h329']
+base_path = '/data/REPOSITORY/e12Gals'
 for sim in sims:
-    halos_to_use = list(Marvel_z0[sim].keys())
+    halos_to_use = list(DCJL_z0[sim].keys())
     # convert to list of ints
     halos_to_use = [int(halo) for halo in halos_to_use]
     print(f'Analyzing {sim}')
-    sim_path = f'{base_path}/{sim}.cosmo25cmb.4096g5HbwK1BH/{sim}.cosmo25cmb.4096g5HbwK1BH.004096/ahf_200/{sim}.cosmo25cmb.4096g5HbwK1BH.004096'
+    sim_path = f'{base_path}/{sim}.cosmo50PLK.3072gst5HbwK1BH/{sim}.cosmo50PLK.3072gst5HbwK1BH.004096/ahf_200/{sim}.cosmo50PLK.3072gst5HbwK1BH.004096'
     print(sim_path)
     # get merger history
-    history_df = analyze_merger_history(sim_path, halos_to_use, num_threads=25)
+    history_df = analyze_merger_history(sim_path, halos_to_use, num_threads=32)
     # save to file
-    with open(f'{sim}.merger_history.pkl', 'wb') as f:
+    with open(f'../DataFiles/{sim}.merger_history.pkl', 'wb') as f:
         pickle.dump(history_df, f)
-
